@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Default no-op implementation of BatchAuditService. Logs lifecycle events but does not persist them.
  */
-public class NoOpBatchAuditService implements BatchAuditService {
+public class NoOpBatchAuditServiceImpl implements BatchAuditService {
 
-    private static final Logger log = LoggerFactory.getLogger(NoOpBatchAuditService.class);
+    private static final Logger log = LoggerFactory.getLogger(NoOpBatchAuditServiceImpl.class);
 
     @Override
     public BatchAuditRecord start(String jobName) {

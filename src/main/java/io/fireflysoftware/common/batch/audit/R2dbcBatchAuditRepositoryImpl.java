@@ -24,11 +24,11 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
  * Repository for persisting BatchAuditRecord using Spring Data R2DBC mapping
  * without hand-written SQL.
  */
-public class R2dbcBatchAuditRepository {
+public class R2dbcBatchAuditRepositoryImpl {
 
     private final R2dbcEntityTemplate template;
 
-    public R2dbcBatchAuditRepository(ConnectionFactory connectionFactory) {
+    public R2dbcBatchAuditRepositoryImpl(ConnectionFactory connectionFactory) {
         this.template = new R2dbcEntityTemplate(connectionFactory);
     }
 

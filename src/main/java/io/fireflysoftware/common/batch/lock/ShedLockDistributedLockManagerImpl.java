@@ -30,16 +30,16 @@ import java.util.Optional;
 /**
  * Adapter that uses ShedLock's LockProvider to implement DistributedLockManager.
  */
-public class ShedLockDistributedLockManager implements DistributedLockManager {
+public class ShedLockDistributedLockManagerImpl implements DistributedLockManager {
 
-    private static final Logger log = LoggerFactory.getLogger(ShedLockDistributedLockManager.class);
+    private static final Logger log = LoggerFactory.getLogger(ShedLockDistributedLockManagerImpl.class);
 
     private final LockProvider lockProvider;
 
     /**
      * Creates a manager that delegates locking to the given ShedLock LockProvider.
      */
-    public ShedLockDistributedLockManager(LockProvider lockProvider) {
+    public ShedLockDistributedLockManagerImpl(LockProvider lockProvider) {
         this.lockProvider = lockProvider;
         log.info("Initialized ShedLockDistributedLockManager with provider {}", lockProvider.getClass().getSimpleName());
     }

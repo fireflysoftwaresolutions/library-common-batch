@@ -18,13 +18,13 @@
 package io.fireflysoftware.common.batch.autoconfig;
 
 import io.fireflysoftware.common.batch.audit.BatchAuditService;
-import io.fireflysoftware.common.batch.audit.R2dbcBatchAuditService;
-import io.fireflysoftware.common.batch.audit.NoOpBatchAuditService;
-import io.fireflysoftware.common.batch.audit.R2dbcBatchAuditRepository;
+import io.fireflysoftware.common.batch.audit.R2dbcBatchAuditServiceImpl;
+import io.fireflysoftware.common.batch.audit.NoOpBatchAuditServiceImpl;
+import io.fireflysoftware.common.batch.audit.R2dbcBatchAuditRepositoryImpl;
 import io.fireflysoftware.common.batch.config.BatchProperties;
 import io.fireflysoftware.common.batch.lock.DistributedLockManager;
-import io.fireflysoftware.common.batch.lock.ShedLockDistributedLockManager;
-import io.fireflysoftware.common.batch.scheduling.BatchSchedulerService;
+import io.fireflysoftware.common.batch.lock.ShedLockDistributedLockManagerImpl;
+import io.fireflysoftware.common.batch.scheduling.BatchSchedulerServiceImpl;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.r2dbc.R2dbcLockProvider;
 import org.slf4j.Logger;
@@ -76,16 +76,16 @@ public class BatchAutoConfiguration {
     public BatchAuditService r2dbcBatchAuditService(ObjectProvider<io.r2dbc.spi.ConnectionFactory> cfProvider, BatchProperties props) {
         if (!props.getAudit().isEnabled()) {
             log.info("Audit disabled by property firefly.batch.audit.enabled=false; using NoOpBatchAuditService");
-            return new NoOpBatchAuditService();
+            return new NoOpBatchAuditServiceImpl();
         }
         io.r2dbc.spi.ConnectionFactory cf = cfProvider.getIfAvailable();
         if (cf == null) {
             log.warn("No R2DBC ConnectionFactory found; falling back to NoOpBatchAuditService");
-            return new NoOpBatchAuditService();
+            return new NoOpBatchAuditServiceImpl();
         }
-        R2dbcBatchAuditRepository repo = new R2dbcBatchAuditRepository(cf);
+        R2dbcBatchAuditRepositoryImpl repo = new R2dbcBatchAuditRepositoryImpl(cf);
         log.info("Initialized R2dbcBatchAuditService (mode=r2dbc)");
-        return new R2dbcBatchAuditService(repo);
+        return new R2dbcBatchAuditServiceImpl(repo);
     }
 
     /**
@@ -95,7 +95,7 @@ public class BatchAutoConfiguration {
     @ConditionalOnMissingBean(BatchAuditService.class)
     public BatchAuditService defaultBatchAuditService() {
         log.info("Initialized default NoOpBatchAuditService (mode=noop)");
-        return new NoOpBatchAuditService();
+        return new NoOpBatchAuditServiceImpl();
     }
 
     /**
@@ -107,7 +107,7 @@ public class BatchAutoConfiguration {
     @ConditionalOnProperty(prefix = "firefly.batch.lock", name = "enabled", havingValue = "true", matchIfMissing = true)
     public DistributedLockManager shedLockDistributedLockManager(LockProvider lockProvider) {
         log.info("Initialized ShedLockDistributedLockManager with LockProvider {}", lockProvider.getClass().getSimpleName());
-        return new ShedLockDistributedLockManager(lockProvider);
+        return new ShedLockDistributedLockManagerImpl(lockProvider);
     }
 
     /**
@@ -115,9 +115,9 @@ public class BatchAutoConfiguration {
      * chosen BatchAuditService, and optionally a DistributedLockManager.
      */
     @Bean
-    @ConditionalOnMissingBean(BatchSchedulerService.class)
+    @ConditionalOnMissingBean(BatchSchedulerServiceImpl.class)
     @ConditionalOnProperty(prefix = "firefly.batch", name = "enabled", havingValue = "true", matchIfMissing = true)
-    public BatchSchedulerService batchSchedulerService(TaskScheduler taskScheduler,
+    public BatchSchedulerServiceImpl batchSchedulerService(TaskScheduler taskScheduler,
                                                        BatchAuditService auditService,
                                                        ObjectProvider<DistributedLockManager> lockManagerProvider,
                                                        BatchProperties props) {
@@ -126,7 +126,7 @@ public class BatchAutoConfiguration {
                 auditService.getClass().getSimpleName(),
                 effectiveLockManager != null ? effectiveLockManager.getClass().getSimpleName() : "none",
                 props.getLock().getAtMostFor(), props.getLock().getAtLeastFor());
-        return new BatchSchedulerService(taskScheduler, auditService, effectiveLockManager,
+        return new BatchSchedulerServiceImpl(taskScheduler, auditService, effectiveLockManager,
                 props.getLock().getAtMostFor(), props.getLock().getAtLeastFor());
     }
 
@@ -135,10 +135,10 @@ public class BatchAutoConfiguration {
      */
     @Bean
     @ConditionalOnProperty(prefix = "firefly.batch", name = "enabled", havingValue = "true", matchIfMissing = true)
-    public ScheduledBatchRegistrar scheduledBatchRegistrar(ApplicationContext applicationContext,
-                                                          BatchSchedulerService schedulerService,
+    public ScheduledBatchRegistrarImpl scheduledBatchRegistrar(ApplicationContext applicationContext,
+                                                          BatchSchedulerServiceImpl schedulerService,
                                                           BatchProperties props) {
         log.info("Initialized ScheduledBatchRegistrar (firefly.batch.enabled={}, scheduler.enabled={})", props.isEnabled(), props.getScheduler().isEnabled());
-        return new ScheduledBatchRegistrar(applicationContext, schedulerService, props);
+        return new ScheduledBatchRegistrarImpl(applicationContext, schedulerService, props);
     }
 }

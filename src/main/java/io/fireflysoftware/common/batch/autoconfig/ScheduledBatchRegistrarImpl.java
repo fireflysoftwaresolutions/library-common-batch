@@ -20,7 +20,7 @@ package io.fireflysoftware.common.batch.autoconfig;
 import io.fireflysoftware.common.batch.api.BatchJob;
 import io.fireflysoftware.common.batch.api.ScheduledBatch;
 import io.fireflysoftware.common.batch.config.BatchProperties;
-import io.fireflysoftware.common.batch.scheduling.BatchSchedulerService;
+import io.fireflysoftware.common.batch.scheduling.BatchSchedulerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
@@ -34,18 +34,18 @@ import java.util.Map;
  * Scans for beans implementing BatchJob and annotated with @ScheduledBatch,
  * registering them with the BatchSchedulerService when the context is ready.
  */
-public class ScheduledBatchRegistrar implements SmartInitializingSingleton {
+public class ScheduledBatchRegistrarImpl implements SmartInitializingSingleton {
 
-    private static final Logger log = LoggerFactory.getLogger(ScheduledBatchRegistrar.class);
+    private static final Logger log = LoggerFactory.getLogger(ScheduledBatchRegistrarImpl.class);
 
     private final ApplicationContext applicationContext;
-    private final BatchSchedulerService schedulerService;
+    private final BatchSchedulerServiceImpl schedulerService;
     private final BatchProperties properties;
 
     /**
      * Creates a registrar that will discover and register BatchJob beans after the context is ready.
      */
-    public ScheduledBatchRegistrar(ApplicationContext applicationContext, BatchSchedulerService schedulerService, BatchProperties properties) {
+    public ScheduledBatchRegistrarImpl(ApplicationContext applicationContext, BatchSchedulerServiceImpl schedulerService, BatchProperties properties) {
         this.applicationContext = applicationContext;
         this.schedulerService = schedulerService;
         this.properties = properties;

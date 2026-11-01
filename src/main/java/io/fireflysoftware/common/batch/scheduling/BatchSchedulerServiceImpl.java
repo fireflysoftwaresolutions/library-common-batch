@@ -34,9 +34,9 @@ import java.util.Optional;
 /**
  * Central scheduling service that registers and runs batch jobs according to their metadata.
  */
-public class BatchSchedulerService {
+public class BatchSchedulerServiceImpl {
 
-    private static final Logger log = LoggerFactory.getLogger(BatchSchedulerService.class);
+    private static final Logger log = LoggerFactory.getLogger(BatchSchedulerServiceImpl.class);
 
     private static final Duration DEFAULT_LOCK_AT_MOST_FOR = Duration.ofMinutes(10);
     private static final Duration DEFAULT_LOCK_AT_LEAST_FOR = Duration.ZERO;
@@ -50,14 +50,14 @@ public class BatchSchedulerService {
     /**
      * Creates a scheduler service without distributed locking.
      */
-    public BatchSchedulerService(TaskScheduler taskScheduler, BatchAuditService auditService) {
+    public BatchSchedulerServiceImpl(TaskScheduler taskScheduler, BatchAuditService auditService) {
         this(taskScheduler, auditService, null, DEFAULT_LOCK_AT_MOST_FOR, DEFAULT_LOCK_AT_LEAST_FOR);
     }
 
     /**
      * Creates a scheduler service with an explicit DistributedLockManager.
      */
-    public BatchSchedulerService(TaskScheduler taskScheduler, BatchAuditService auditService, DistributedLockManager lockManager) {
+    public BatchSchedulerServiceImpl(TaskScheduler taskScheduler, BatchAuditService auditService, DistributedLockManager lockManager) {
         this(taskScheduler, auditService, lockManager, DEFAULT_LOCK_AT_MOST_FOR, DEFAULT_LOCK_AT_LEAST_FOR);
     }
 
@@ -70,7 +70,7 @@ public class BatchSchedulerService {
      * @param lockAtMostFor default maximum lock duration
      * @param lockAtLeastFor default minimum lock duration
      */
-    public BatchSchedulerService(TaskScheduler taskScheduler, BatchAuditService auditService, DistributedLockManager lockManager,
+    public BatchSchedulerServiceImpl(TaskScheduler taskScheduler, BatchAuditService auditService, DistributedLockManager lockManager,
                                  Duration lockAtMostFor, Duration lockAtLeastFor) {
         this.taskScheduler = taskScheduler;
         this.auditService = auditService;

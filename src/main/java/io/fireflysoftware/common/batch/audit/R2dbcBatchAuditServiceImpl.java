@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
  * R2DBC-based implementation of BatchAuditService using a repository instead of
  * hand-written SQL.
  */
-public class R2dbcBatchAuditService implements BatchAuditService {
+public class R2dbcBatchAuditServiceImpl implements BatchAuditService {
 
-    private static final Logger log = LoggerFactory.getLogger(R2dbcBatchAuditService.class);
+    private static final Logger log = LoggerFactory.getLogger(R2dbcBatchAuditServiceImpl.class);
 
-    private final R2dbcBatchAuditRepository repository;
+    private final R2dbcBatchAuditRepositoryImpl repository;
 
-    public R2dbcBatchAuditService(R2dbcBatchAuditRepository repository) {
+    public R2dbcBatchAuditServiceImpl(R2dbcBatchAuditRepositoryImpl repository) {
         this.repository = repository;
         log.info("Initialized R2dbcBatchAuditService with repository {}", repository.getClass().getSimpleName());
     }
