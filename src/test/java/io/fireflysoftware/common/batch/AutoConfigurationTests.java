@@ -18,10 +18,10 @@
 package io.fireflysoftware.common.batch;
 
 import io.fireflysoftware.common.batch.audit.BatchAuditService;
-import io.fireflysoftware.common.batch.audit.NoOpBatchAuditService;
+import io.fireflysoftware.common.batch.audit.NoOpBatchAuditServiceImpl;
 import io.fireflysoftware.common.batch.autoconfig.BatchAutoConfiguration;
-import io.fireflysoftware.common.batch.autoconfig.ScheduledBatchRegistrar;
-import io.fireflysoftware.common.batch.scheduling.BatchSchedulerService;
+import io.fireflysoftware.common.batch.autoconfig.ScheduledBatchRegistrarImpl;
+import io.fireflysoftware.common.batch.scheduling.BatchSchedulerServiceImpl;
 import io.fireflysoftware.common.batch.testsupport.CapturingTaskScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -45,10 +45,10 @@ class AutoConfigurationTests {
             assertThat(ctx.getBean(TaskScheduler.class)).isInstanceOf(ThreadPoolTaskScheduler.class);
 
             assertThat(ctx).hasSingleBean(BatchAuditService.class);
-            assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(NoOpBatchAuditService.class);
+            assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(NoOpBatchAuditServiceImpl.class);
 
-            assertThat(ctx).hasSingleBean(BatchSchedulerService.class);
-            assertThat(ctx).hasSingleBean(ScheduledBatchRegistrar.class);
+            assertThat(ctx).hasSingleBean(BatchSchedulerServiceImpl.class);
+            assertThat(ctx).hasSingleBean(ScheduledBatchRegistrarImpl.class);
         });
     }
 
@@ -57,7 +57,7 @@ class AutoConfigurationTests {
         contextRunner.withUserConfiguration(CustomAuditConfig.class).run(ctx -> {
             assertThat(ctx).hasSingleBean(BatchAuditService.class);
             assertThat(ctx.getBean(BatchAuditService.class).getClass().getName()).isEqualTo(CustomAuditService.class.getName());
-            assertThat(ctx.getBeansOfType(NoOpBatchAuditService.class)).isEmpty();
+            assertThat(ctx.getBeansOfType(NoOpBatchAuditServiceImpl.class)).isEmpty();
         });
     }
 

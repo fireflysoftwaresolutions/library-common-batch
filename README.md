@@ -104,10 +104,10 @@ public @interface ScheduledBatch {
 Auto-configuration creates and configures the main beans when `firefly.batch.enabled=true` (default):
 - Default `TaskScheduler` (if you don't define one) using `firefly.batch.scheduler.*`.
 - Default `BatchAuditService`:
-  - `NoOpBatchAuditService` by default
-  - `R2dbcBatchAuditService` if `mode=r2dbc` and a `ConnectionFactory` + `R2dbcEntityTemplate` are available
+  - `NoOpBatchAuditServiceImpl` by default
+  - `R2dbcBatchAuditServiceImpl` if `mode=r2dbc` and a `ConnectionFactory` + `R2dbcEntityTemplate` are available
 - `DistributedLockManager` (ShedLock) if a `LockProvider` exists and `firefly.batch.lock.enabled=true`.
-- Automatic job registration via `ScheduledBatchRegistrar` if `firefly.batch.scheduler.enabled=true`.
+- Automatic job registration via `ScheduledBatchRegistrarImpl` if `firefly.batch.scheduler.enabled=true`.
 
 ### Sample application.yml
 ```yaml

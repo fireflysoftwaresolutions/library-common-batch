@@ -18,8 +18,8 @@
 package io.fireflysoftware.common.batch;
 
 import io.fireflysoftware.common.batch.audit.BatchAuditService;
-import io.fireflysoftware.common.batch.audit.NoOpBatchAuditService;
-import io.fireflysoftware.common.batch.audit.R2dbcBatchAuditService;
+import io.fireflysoftware.common.batch.audit.NoOpBatchAuditServiceImpl;
+import io.fireflysoftware.common.batch.audit.R2dbcBatchAuditServiceImpl;
 import io.fireflysoftware.common.batch.autoconfig.BatchAutoConfiguration;
 import io.fireflysoftware.common.batch.autoconfig.FlywayBatchAuditAutoConfiguration;
 import io.r2dbc.spi.ConnectionFactory;
@@ -44,7 +44,7 @@ class AuditAutoConfigurationTests {
     void defaultModeIsNoopEvenIfConnectionFactoryExists() {
         baseRunner.withUserConfiguration(CFConfig.class).run(ctx -> {
             assertThat(ctx).hasSingleBean(BatchAuditService.class);
-            assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(NoOpBatchAuditService.class);
+            assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(NoOpBatchAuditServiceImpl.class);
         });
     }
 
@@ -54,7 +54,7 @@ class AuditAutoConfigurationTests {
                 .withPropertyValues("firefly.batch.audit.mode=r2dbc")
                 .run(ctx -> {
                     assertThat(ctx).hasSingleBean(BatchAuditService.class);
-                    assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(R2dbcBatchAuditService.class);
+                    assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(R2dbcBatchAuditServiceImpl.class);
                 });
     }
 
@@ -62,7 +62,7 @@ class AuditAutoConfigurationTests {
     void r2dbcModeWithoutConnectionFactoryFallsBackToNoop() {
         baseRunner.withPropertyValues("firefly.batch.audit.mode=r2dbc").run(ctx -> {
             assertThat(ctx).hasSingleBean(BatchAuditService.class);
-            assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(NoOpBatchAuditService.class);
+            assertThat(ctx.getBean(BatchAuditService.class)).isInstanceOf(NoOpBatchAuditServiceImpl.class);
         });
     }
 

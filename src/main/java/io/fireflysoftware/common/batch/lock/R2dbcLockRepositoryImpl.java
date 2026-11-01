@@ -29,11 +29,11 @@ import java.time.Instant;
 /**
  * Minimal repository for ShedLock table operations using Spring Data R2DBC mapping API.
  */
-class R2dbcLockRepository {
+class R2dbcLockRepositoryImpl {
 
     private final R2dbcEntityTemplate template;
 
-    R2dbcLockRepository(ConnectionFactory connectionFactory) {
+    R2dbcLockRepositoryImpl(ConnectionFactory connectionFactory) {
         this.template = new R2dbcEntityTemplate(connectionFactory);
     }
 
